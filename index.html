@@ -223,6 +223,66 @@
     </div>
   </div>
 
+  <!-- EDIT MODAL -->
+  <div class="overlay" id="editOv">
+    <div class="modal">
+      <div class="modal-hdr">
+        <div class="modal-ttl"><i class="fa-solid fa-pen" style="color:var(--c4)"></i> Edit Echo</div>
+        <div class="modal-x" onclick="closeEdit()"><i class="fa-solid fa-xmark"></i></div>
+      </div>
+      <div class="modal-body">
+        <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-heading"></i> Title *</label><input class="f-in" id="eTi" placeholder="Name this memory…"></div>
+        <div class="f-row">
+          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-tag"></i> Type</label>
+            <select class="f-sel" id="eTy">
+              <option value="trip">✦ Trip / Travel</option>
+              <option value="achievement">✦ Achievement</option>
+              <option value="certificate">✦ Certificate</option>
+              <option value="journal">✦ Journal Entry</option>
+              <option value="event">✦ Event</option>
+              <option value="project">✦ Project</option>
+              <option value="photo">✦ Photo / Memory</option>
+              <option value="other">✦ Other</option>
+            </select>
+          </div>
+          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-calendar"></i> Date *</label><input class="f-in" id="eDt" type="date"></div>
+        </div>
+        <div class="f-row">
+          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-city"></i> City</label><input class="f-in" id="eCi" placeholder="e.g. Delhi"></div>
+          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-earth-asia"></i> Country</label><input class="f-in" id="eCo" placeholder="e.g. India"></div>
+        </div>
+        <div class="f-row">
+          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-face-smile"></i> Mood</label>
+            <select class="f-sel" id="eMd">
+              <option value="happy">Happy</option>
+              <option value="excited">Excited</option>
+              <option value="proud">Proud</option>
+              <option value="nostalgic">Nostalgic</option>
+              <option value="adventurous">Adventurous</option>
+              <option value="grateful">Grateful</option>
+              <option value="neutral">Neutral</option>
+              <option value="sad">Sad</option>
+            </select>
+          </div>
+          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-calendar-check"></i> End Date</label><input class="f-in" id="eEd" type="date"></div>
+        </div>
+        <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-hashtag"></i> Tags</label><input class="f-in" id="eTg" placeholder="travel, adventure, personal"><div class="f-hint">Separate with commas</div></div>
+        <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-pen"></i> Description</label><textarea class="f-ta" id="eDe" placeholder="Tell the story of this memory…"></textarea></div>
+        <div class="f-g">
+          <label class="f-lbl"><i class="fa-solid fa-photo-film"></i> Media <span style="color:var(--txt3);font-family:var(--fm);font-size:.6rem;text-transform:none;letter-spacing:0;margin-left:4px">Add more or remove existing</span></label>
+          <div class="media-upload-zone" id="editUploadZone" onclick="document.getElementById('editMediaInput').click()">
+            <input type="file" id="editMediaInput" accept="image/*,video/*" multiple style="display:none" onchange="handleEditMediaUpload(this.files)">
+            <div class="muz-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+            <div class="muz-txt"><i class="fa-solid fa-folder-open" style="margin-right:6px"></i>Click to add more</div>
+            <div class="muz-sub">Images and videos supported</div>
+          </div>
+          <div class="media-preview-grid" id="editMediaPreviews"></div>
+        </div>
+      </div>
+      <div class="modal-ftr"><button class="btn-cancel" onclick="closeEdit()">Cancel</button><button class="btn-save" onclick="saveEdit()" style="background:var(--c4)"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button></div>
+    </div>
+  </div>
+
   <!-- CONFIRM MODAL -->
   <div id="confirmOv">
     <div class="confirm-box">
@@ -269,6 +329,6 @@
     window._firebaseReady=true;window.dispatchEvent(new Event('firebase-ready'));
   </script>
 
-  <script src="script.js"></script>
+ <script src="script.js"></script>
 </body>
 </html>

@@ -1,24 +1,24 @@
-/* ── THEME ── */
-function toggleTheme() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const next = isDark ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('ev_theme', next);
-}
-(function () {
-  const t = localStorage.getItem('ev_theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', t);
-  if (t === 'light') setTimeout(() => { const el = document.getElementById('themeToggle'); if (el) el.checked = true }, 50);
-})();
+    /* ── THEME ── */
+  function toggleTheme(){
+      const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  const next=isDark?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  localStorage.setItem('ev_theme',next);
+    }
+  (function(){
+      const t=localStorage.getItem('ev_theme')||'dark';
+  document.documentElement.setAttribute('data-theme',t);
+      if(t==='light')setTimeout(()=>{const el=document.getElementById('themeToggle');if(el)el.checked=true},50);
+    })();
 
-/* ── CONSTANTS ── */
-const ICONS = { trip: 'fa-plane', achievement: 'fa-trophy', certificate: 'fa-certificate', journal: 'fa-book-open', event: 'fa-calendar-star', project: 'fa-code', photo: 'fa-camera', other: 'fa-box' };
-const MOOD_ICONS = { happy: 'fa-face-smile', excited: 'fa-face-grin-stars', proud: 'fa-fist-raised', nostalgic: 'fa-heart', adventurous: 'fa-person-hiking', grateful: 'fa-hands', neutral: 'fa-face-meh', sad: 'fa-face-sad-tear' };
-const MOOD_LABELS = { happy: 'Happy', excited: 'Excited', proud: 'Proud', nostalgic: 'Nostalgic', adventurous: 'Adventurous', grateful: 'Grateful', neutral: 'Neutral', sad: 'Sad' };
-const TYPE_LABELS = { trip: 'Trip', achievement: 'Achievement', certificate: 'Certificate', journal: 'Journal', event: 'Event', project: 'Project', photo: 'Photo', other: 'Other' };
+  /* ── CONSTANTS ── */
+  const ICONS={trip:'fa-plane',achievement:'fa-trophy',certificate:'fa-certificate',journal:'fa-book-open',event:'fa-calendar-star',project:'fa-code',photo:'fa-camera',other:'fa-box'};
+  const MOOD_ICONS={happy:'fa-face-smile',excited:'fa-face-grin-stars',proud:'fa-fist-raised',nostalgic:'fa-heart',adventurous:'fa-person-hiking',grateful:'fa-hands',neutral:'fa-face-meh',sad:'fa-face-sad-tear'};
+  const MOOD_LABELS={happy:'Happy',excited:'Excited',proud:'Proud',nostalgic:'Nostalgic',adventurous:'Adventurous',grateful:'Grateful',neutral:'Neutral',sad:'Sad'};
+  const TYPE_LABELS={trip:'Trip',achievement:'Achievement',certificate:'Certificate',journal:'Journal',event:'Event',project:'Project',photo:'Photo',other:'Other'};
 
-/* ── HELPERS ── */
-function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') }
+  /* ── HELPERS ── */
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')}
 function fmtDate(d) { if (!d) return ''; return new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) }
 function toast(msg, ok = true) {
   document.getElementById('toastMsg').textContent = msg;
@@ -357,7 +357,7 @@ async function openDet(id) {
           ${m.desc ? `<div class="det-section-label"><i class="fa-solid fa-pen-to-square"></i> Story</div><div class="det-desc">${esc(m.desc).replace(/\n/g, '<br>')}</div>` : `<div class="det-no-desc"><i class="fa-regular fa-file-lines" style="opacity:.35;margin-right:6px"></i>No description added.</div>`}
           ${(m.tags || []).length ? `<div style="margin-top:16px"><div class="det-section-label"><i class="fa-solid fa-hashtag"></i> Tags</div><div class="det-tags">${m.tags.map(t => `<span class="det-tag t-${m.type}">#${esc(t)}</span>`).join('')}</div></div>` : ''}
         </div>
-        <div class="det-actions"><button class="det-del-btn" onclick="confirmDeleteEcho()"><i class="fa-solid fa-trash"></i> Delete Echo</button></div>
+        <div class="det-actions"><button class="det-edit-btn" onclick="openEdit()"><i class="fa-solid fa-pen"></i> Edit Echo</button><button class="det-del-btn" onclick="confirmDeleteEcho()"><i class="fa-solid fa-trash"></i> Delete</button></div>
         <button class="det-close-btn" onclick="closeDet()"><i class="fa-solid fa-xmark"></i></button>`;
 
   document.getElementById('detOv').classList.add('open');
@@ -387,6 +387,100 @@ async function deleteCurrentEcho() {
   refresh(); closeDet(); toast('Echo deleted.'); saveMem(currentUser, memories);
 }
 
+/* ── EDIT ── */
+let editMediaFiles = [];  // holds mixed: existing {idbKey,type,name} + new {data,type,name}
+let editMediaSrcCache = {}; // idbKey->src for rendering existing
+
+async function openEdit() {
+  const m = memories.find(x => x.id === detailId); if (!m) return;
+  // Pre-load existing media sources for preview rendering
+  editMediaSrcCache = await preloadMemoryMedia(m);
+  // Clone existing media refs so we can mutate without touching original
+  editMediaFiles = [...(m.media || []).map(f => ({ ...f }))];
+
+  // Populate fields
+  document.getElementById('eTi').value = m.title || '';
+  document.getElementById('eTy').value = m.type || 'trip';
+  document.getElementById('eDt').value = m.date || '';
+  document.getElementById('eEd').value = m.endDate || '';
+  document.getElementById('eCi').value = m.city || '';
+  document.getElementById('eCo').value = m.country || '';
+  document.getElementById('eMd').value = m.mood || 'happy';
+  document.getElementById('eTg').value = (m.tags || []).join(', ');
+  document.getElementById('eDe').value = m.desc || '';
+  document.getElementById('editMediaInput').value = '';
+
+  renderEditPreviews();
+  document.getElementById('editOv').classList.add('open');
+}
+
+function closeEdit() { document.getElementById('editOv').classList.remove('open') }
+
+function handleEditMediaUpload(files) {
+  const arr = Array.from(files), remaining = 8 - editMediaFiles.length;
+  if (remaining <= 0) { toast('Max 8 files per memory', false); return }
+  arr.slice(0, remaining).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => { editMediaFiles.push({ data: e.target.result, type: file.type, name: file.name }); renderEditPreviews() };
+    reader.readAsDataURL(file);
+  });
+}
+
+function removeEditMedia(i) { editMediaFiles.splice(i, 1); renderEditPreviews() }
+
+function renderEditPreviews() {
+  document.getElementById('editMediaPreviews').innerHTML = editMediaFiles.map((f, i) => {
+    // existing saved file: use cache; new file: use .data directly
+    const src = f.data || (f.idbKey ? editMediaSrcCache[Object.keys(editMediaSrcCache).findIndex(k => k === Object.keys(editMediaSrcCache)[i])] : '');
+    // Simpler: resolve src synchronously from cache using index mapping
+    const isVid = f.type && f.type.startsWith('video');
+    return `<div class="med-prev">
+          ${isVid ? `<video muted></video><div class="med-vid-badge"><i class="fa-solid fa-video"></i></div>` : `<img alt="preview">`}
+          <button class="med-prev-del" onclick="removeEditMedia(${i})"><i class="fa-solid fa-xmark"></i></button>
+        </div>`;
+  }).join('');
+  // async-fill images/videos from IDB or data
+  const els = document.querySelectorAll('#editMediaPreviews .med-prev');
+  editMediaFiles.forEach(async (f, i) => {
+    const el = els[i]; if (!el) return;
+    const media = el.querySelector('img,video'); if (!media) return;
+    let src = f.data || null;
+    if (!src && f.idbKey) src = await idbGet(f.idbKey);
+    if (src && media) media.src = src;
+  });
+}
+
+async function saveEdit() {
+  const title = document.getElementById('eTi').value.trim();
+  const date = document.getElementById('eDt').value;
+  if (!title) { toast('Please enter a title.', false); return }
+  if (!date) { toast('Please pick a date.', false); return }
+  const idx = memories.findIndex(x => x.id === detailId); if (idx === -1) return;
+  const memId = memories[idx].id;
+  const tags = document.getElementById('eTg').value.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+
+  // Save any NEW media files to IDB, keep existing refs as-is
+  const mediaRefs = await saveMediaLocally(memId, editMediaFiles);
+
+  memories[idx] = {
+    ...memories[idx],
+    title,
+    type: document.getElementById('eTy').value,
+    date,
+    endDate: document.getElementById('eEd').value || null,
+    city: document.getElementById('eCi').value.trim(),
+    country: document.getElementById('eCo').value.trim(),
+    mood: document.getElementById('eMd').value,
+    tags,
+    desc: document.getElementById('eDe').value.trim(),
+    media: mediaRefs
+  };
+
+  closeEdit(); refresh(); toast('Echo updated!'); saveMem(currentUser, memories);
+  // Re-open detail view to show updated content
+  await openDet(detailId);
+}
+
 /* ── CONFIRM MODAL ── */
 let _confirmCallback = null;
 function openConfirm({ icon, iconType, title, msg, okLabel, okClass, onOk }) {
@@ -413,11 +507,17 @@ uz.addEventListener('dragleave', () => { uz.style.borderStyle = 'dashed'; uz.sty
 uz.addEventListener('drop', e => { e.preventDefault(); uz.style.borderStyle = 'dashed'; uz.style.background = ''; handleMediaUpload(e.dataTransfer.files) });
 
 /* ── BACKDROP CLOSE ── */
-['addOv', 'detOv'].forEach(id => {
+['addOv', 'detOv', 'editOv'].forEach(id => {
   document.getElementById(id).addEventListener('click', function (e) {
     if (e.target === this) { if (id === 'detOv') document.querySelectorAll('#detContent video').forEach(v => v.pause()); this.classList.remove('open') }
   });
 });
+
+/* ── DRAG & DROP (edit modal) ── */
+const euz = document.getElementById('editUploadZone');
+euz.addEventListener('dragover', e => { e.preventDefault(); euz.style.borderStyle = 'solid'; euz.style.background = 'rgba(77,150,255,.08)' });
+euz.addEventListener('dragleave', () => { euz.style.borderStyle = 'dashed'; euz.style.background = '' });
+euz.addEventListener('drop', e => { e.preventDefault(); euz.style.borderStyle = 'dashed'; euz.style.background = ''; handleEditMediaUpload(e.dataTransfer.files) });
 
 /* ── KEYBOARD ── */
 document.getElementById('lP').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin() });
@@ -432,7 +532,7 @@ document.addEventListener('keydown', e => {
   if (!document.getElementById('detOv').classList.contains('open')) return;
   if (e.key === 'ArrowLeft') shiftDetGal(-1);
   if (e.key === 'ArrowRight') shiftDetGal(1);
-  if (e.key === 'Escape') closeDet();
+  if (e.key === 'Escape') { if (document.getElementById('editOv').classList.contains('open')) { closeEdit(); return } closeDet() }
 });
 
 /* ── LIGHTBOX ── */
