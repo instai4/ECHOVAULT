@@ -341,50 +341,121 @@ if(window._firebaseReady){
   },8000);
 }
 
-/* ── MEDIA ── */
+/* ══════════════════════════════════════════════════════
+   MEDIA — IndexedDB local storage
+   Photos & videos stay on THIS device only (instant).
+   No upload, no cloud, no buffering ever.
+   Firestore only stores the metadata (title, date etc.)
+   with tiny placeholder refs — no base64 blobs.
+══════════════════════════════════════════════════════ */
+
+/* ── IndexedDB setup ── */
+let _idb=null;
+function openIDB(){
+  if(_idb)return Promise.resolve(_idb);
+  return new Promise((res,rej)=>{
+    const req=indexedDB.open('echovault_media',1);
+    req.onupgradeneeded=e=>{
+      e.target.result.createObjectStore('media');
+    };
+    req.onsuccess=e=>{_idb=e.target.result;res(_idb)};
+    req.onerror=()=>rej(req.error);
+  });
+}
+async function idbSet(key,value){
+  const db=await openIDB();
+  return new Promise((res,rej)=>{
+    const tx=db.transaction('media','readwrite');
+    tx.objectStore('media').put(value,key);
+    tx.oncomplete=()=>res();
+    tx.onerror=()=>rej(tx.error);
+  });
+}
+async function idbGet(key){
+  const db=await openIDB();
+  return new Promise((res,rej)=>{
+    const tx=db.transaction('media','readonly');
+    const req=tx.objectStore('media').get(key);
+    req.onsuccess=()=>res(req.result||null);
+    req.onerror=()=>rej(req.error);
+  });
+}
+async function idbDel(key){
+  const db=await openIDB();
+  return new Promise((res,rej)=>{
+    const tx=db.transaction('media','readwrite');
+    tx.objectStore('media').delete(key);
+    tx.oncomplete=()=>res();
+    tx.onerror=()=>rej(tx.error);
+  });
+}
+
+/* ── Media file handling ── */
 function handleMediaUpload(files){
   const arr=Array.from(files);
   const remaining=8-mediaFiles.length;
   if(remaining<=0){toast('Max 8 files per memory',false);return}
   arr.slice(0,remaining).forEach(file=>{
     const reader=new FileReader();
-    reader.onload=e=>{mediaFiles.push({data:e.target.result,type:file.type,name:file.name});renderMediaPreviews()};
+    reader.onload=e=>{
+      mediaFiles.push({data:e.target.result,type:file.type,name:file.name});
+      renderMediaPreviews();
+    };
     reader.readAsDataURL(file);
   });
 }
 function renderMediaPreviews(){
   document.getElementById('mediaPreviews').innerHTML=mediaFiles.map((f,i)=>{
-    const src=f.url||f.data;
+    const src=f.data||f.localSrc||'';
     return`<div class="med-prev">
-      ${f.type.startsWith('video')?`<video src="${src}" muted></video><div class="med-vid-badge"><i class="fa-solid fa-video"></i></div>`:`<img src="${src}" alt="preview">`}
+      ${f.type.startsWith('video')
+        ?`<video src="${src}" muted></video><div class="med-vid-badge"><i class="fa-solid fa-video"></i></div>`
+        :`<img src="${src}" alt="preview">`}
       <button class="med-prev-del" onclick="removeMedia(${i})"><i class="fa-solid fa-xmark"></i></button>
     </div>`;
   }).join('');
 }
 function removeMedia(i){mediaFiles.splice(i,1);renderMediaPreviews()}
 
-/* ── UPLOAD MEDIA TO FIREBASE STORAGE ── */
-async function uploadMediaToStorage(uid, memId, mediaArr){
-  const uploaded=[];
+/*
+  saveMediaLocally — stores each file in IndexedDB under a unique key.
+  Returns lightweight refs: [{idbKey, type, name}] — NO base64 in Firestore.
+*/
+async function saveMediaLocally(memId, mediaArr){
+  const refs=[];
   for(let i=0;i<mediaArr.length;i++){
     const f=mediaArr[i];
-    /* already uploaded on a previous save — keep the storage URL */
-    if(f.url){uploaded.push(f);continue;}
-    try{
-      const path=`users/${uid}/${memId}_${i}`;
-      const storRef=window._stRef(window._storage, path);
-      const base64=f.data.split(',')[1];
-      await window._stUpload(storRef, base64, 'base64', {contentType:f.type});
-      const url=await window._stGetUrl(storRef);
-      /* store url + path (path needed if we ever want to delete from Storage) */
-      uploaded.push({url, type:f.type, name:f.name, path});
-    }catch(e){
-      console.warn('Storage upload failed for file',i,e);
-      /* fallback: keep base64 so the memory is never lost */
-      uploaded.push(f);
-    }
+    if(f.idbKey){refs.push(f);continue;} /* already saved */
+    const key=`ev_media_${memId}_${i}`;
+    await idbSet(key, f.data);            /* store base64 in IndexedDB */
+    refs.push({idbKey:key, type:f.type, name:f.name});
   }
-  return uploaded;
+  return refs;
+}
+
+/*
+  loadMediaSrc — given a media ref, returns a data URL for display.
+  Checks IndexedDB first (local), then falls back to f.data or f.url.
+*/
+async function loadMediaSrc(f){
+  if(f.idbKey){
+    const data=await idbGet(f.idbKey);
+    if(data)return data;
+  }
+  return f.url||f.data||null; /* url = old Firebase Storage URL (legacy), data = raw base64 */
+}
+
+/*
+  preloadMemoryMedia — loads all media src for a memory into a map.
+  Called before opening the detail modal so display is instant.
+*/
+async function preloadMemoryMedia(mem){
+  if(!mem.media||!mem.media.length)return{};
+  const map={};
+  await Promise.all(mem.media.map(async(f,i)=>{
+    map[i]=await loadMediaSrc(f);
+  }));
+  return map;
 }
 
 /* ── RENDER CARDS ── */
@@ -405,10 +476,14 @@ function render(){
     const mi=MOOD_ICONS[m.mood]||'fa-face-smile';
     const cover=m.media&&m.media.length?m.media[0]:null;
     const mCount=m.media?m.media.length:0;
+    const isVidCover=cover&&cover.type&&cover.type.startsWith('video');
     return`<div class="m-card t-${m.type}" onclick="openDet(${m.id})" data-id="${m.id}">
-      <div class="card-media">
-        ${cover?(cover.type.startsWith('video')?`<video src="${cover.url||cover.data}" muted></video>`:`<img src="${cover.url||cover.data}" alt="${esc(m.title)}">`):
-        `<div class="card-media-empty"><div class="media-empty-icon"><i class="fa-solid ${ic}"></i></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--txt3)">No media</span></div>`}
+      <div class="card-media" id="cm_${m.id}">
+        ${cover
+          ?(isVidCover
+            ?`<video data-idb="${cover.idbKey||''}" data-fallback="${cover.url||cover.data||''}" muted class="lazy-media"></video>`
+            :`<img data-idb="${cover.idbKey||''}" data-fallback="${cover.url||cover.data||''}" alt="${esc(m.title)}" class="lazy-media">`)
+          :`<div class="card-media-empty"><div class="media-empty-icon"><i class="fa-solid ${ic}"></i></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--txt3)">No media</span></div>`}
         ${mCount>1?`<div class="media-count-badge"><i class="fa-solid fa-photo-film"></i> ${mCount}</div>`:''}
       </div>
       <div class="card-type-stripe"></div>
@@ -428,6 +503,21 @@ function render(){
     </div>`;
   }).join('')}</div>`;
   updateStats();
+  /* After DOM is built, async-fill media from IndexedDB */
+  requestAnimationFrame(()=>loadLazyMedia());
+}
+
+/* Loads all .lazy-media elements from IndexedDB asynchronously */
+async function loadLazyMedia(){
+  const els=document.querySelectorAll('.lazy-media');
+  for(const el of els){
+    const key=el.getAttribute('data-idb');
+    const fallback=el.getAttribute('data-fallback');
+    let src=null;
+    if(key){src=await idbGet(key);}
+    if(!src)src=fallback;
+    if(src)el.src=src;
+  }
 }
 
 function updateStats(){
@@ -472,16 +562,8 @@ async function saveMemory(){
   const tags=document.getElementById('fTg').value.split(',').map(t=>t.trim().toLowerCase()).filter(Boolean);
   const memId=Date.now();
 
-  /* ── Upload photos/videos to Firebase Storage first ── */
-  let processedMedia=[...mediaFiles];
-  if(mediaFiles.length>0){
-    closeAdd(); // close modal so user sees the loader
-    showLoading('Uploading photos & videos…');
-    processedMedia=await uploadMediaToStorage(currentUser, memId, mediaFiles);
-    hideLoading();
-  } else {
-    closeAdd();
-  }
+  /* Save media to IndexedDB instantly — no upload, no network, no wait */
+  const mediaRefs=await saveMediaLocally(memId, mediaFiles);
 
   memories.unshift({
     id:memId, title,
@@ -493,22 +575,23 @@ async function saveMemory(){
     mood:    document.getElementById('fMd').value,
     tags,
     desc:    document.getElementById('fDe').value.trim(),
-    media:   processedMedia   /* {url, type, name, path} instead of {data, type, name} */
+    media:   mediaRefs   /* [{idbKey, type, name}] — tiny, no base64 */
   });
 
+  closeAdd();
   ['fTi','fDt','fEd','fCi','fCo','fTg','fDe'].forEach(id=>document.getElementById(id).value='');
   curFilter='all';
   document.querySelectorAll('.fpill').forEach((b,i)=>b.classList.toggle('active',i===0));
   refresh();
-  toast('Echo saved to vault.');
+  toast('Echo saved.');
   document.getElementById('app').scrollIntoView({behavior:'smooth'});
-  saveMem(currentUser,memories); /* background cloud sync — no await needed */
+  saveMem(currentUser,memories); /* sync metadata to Firestore in background */
 }
 
 /* ═══════════════════════════════
    DETAIL MODAL — FIXED MEDIA
 ═══════════════════════════════ */
-function openDet(id){
+async function openDet(id){
   const m=memories.find(x=>x.id===id);if(!m)return;
   detailId=id;galCurrent=0;
   const ic=ICONS[m.type]||'fa-box';
@@ -517,13 +600,16 @@ function openDet(id){
   galTotal=med.length;
   const moodLabel=MOOD_LABELS[m.mood]||'—';
 
+  /* Pre-load all media src from IndexedDB — fast, local read */
+  const mediaSrcMap=await preloadMemoryMedia(m);
+
   // Build gallery
   let galleryHTML='';
   if(med.length){
     // Build slides
     const slides=med.map((f,i)=>{
-      const isVid=f.type.startsWith('video');
-      const src=f.url||f.data;
+      const isVid=f.type&&f.type.startsWith('video');
+      const src=mediaSrcMap[i]||'';
       return `<div class="det-gallery-slide">
         ${isVid
           ?`<video src="${src}" controls preload="metadata" style="width:100%;height:100%;object-fit:contain;display:block;background:#000"></video>`
@@ -534,8 +620,8 @@ function openDet(id){
 
     // Build thumbs
     const thumbs=med.map((f,i)=>{
-      const isVid=f.type.startsWith('video');
-      const src=f.url||f.data;
+      const isVid=f.type&&f.type.startsWith('video');
+      const src=mediaSrcMap[i]||'';
       return `<div class="det-thumb ${i===0?'active':''}" onclick="goGalTo(${i})" id="dthumb${i}">
         ${isVid
           ?`<div class="det-thumb-vid"><i class="fa-solid fa-play"></i></div>`
@@ -635,9 +721,16 @@ function confirmDeleteEcho(){
 }
 async function deleteCurrentEcho(){
   if(!detailId)return;
-  memories=memories.filter(m=>m.id!==detailId);
+  const m=memories.find(x=>x.id===detailId);
+  /* Delete media from IndexedDB too */
+  if(m&&m.media){
+    for(const f of m.media){
+      if(f.idbKey)idbDel(f.idbKey).catch(()=>{});
+    }
+  }
+  memories=memories.filter(x=>x.id!==detailId);
   refresh();closeDet();toast('Echo deleted.');
-  saveMem(currentUser,memories); /* background cloud sync */
+  saveMem(currentUser,memories);
 }
 
 /* ── CONFIRM MODAL ── */
@@ -701,17 +794,20 @@ document.addEventListener('keydown',e=>{
 });
 
 /* ── LIGHTBOX ── */
-let lbCurrent=0,lbMedia=[],lbTouchStartX=0,lbTouchStartY=0;
+let lbCurrent=0,lbMedia=[],lbSrcMap={};
 
-function openLightbox(startIndex){
+async function openLightbox(startIndex){
   const m=memories.find(x=>x.id===detailId);if(!m||!m.media||!m.media.length)return;
   lbMedia=m.media;
   lbCurrent=startIndex||0;
 
-  // Build slides
+  /* Load all media src from IndexedDB first */
+  lbSrcMap=await preloadMemoryMedia(m);
+
+  // Build slides with loaded src
   document.getElementById('lbTrack').innerHTML=lbMedia.map((f,i)=>{
-    const isVid=f.type.startsWith('video');
-    const src=f.url||f.data;
+    const isVid=f.type&&f.type.startsWith('video');
+    const src=lbSrcMap[i]||'';
     return `<div class="lb-slide">
       ${isVid
         ?`<video src="${src}" controls preload="metadata"></video>`
@@ -725,24 +821,19 @@ function openLightbox(startIndex){
     :'';
   document.getElementById('lbDots').style.display=lbMedia.length>1?'flex':'none';
 
-  // Show/hide prev/next
   document.getElementById('lbPrev').style.display=lbMedia.length>1?'flex':'none';
   document.getElementById('lbNext').style.display=lbMedia.length>1?'flex':'none';
 
-  // Swipe hint on mobile
   const hint=document.getElementById('lbHint');
   if(lbMedia.length>1&&window.innerWidth<=600){
     hint.style.display='flex';
-    // re-trigger animation
     hint.style.animation='none';
     requestAnimationFrame(()=>hint.style.animation='fadeHint 2.8s ease forwards');
-  } else {hint.style.display='none'}
+  }else{hint.style.display='none'}
 
   document.getElementById('lightboxOv').classList.add('open');
   document.body.style.overflow='hidden';
   lbGoTo(lbCurrent,false);
-
-  // Pause detail gallery videos while lightbox is open
   document.querySelectorAll('.det-gallery-slide video').forEach(v=>v.pause());
 }
 
