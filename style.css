@@ -1601,15 +1601,18 @@
     #detOv .modal {
       max-width: 680px;
       padding: 0;
-      overflow: hidden
+      overflow-y: auto;
+      overflow-x: hidden
     }
 
     .det-gallery {
-      position: relative;
+      position: sticky;
+      top: 0;
       width: 100%;
       height: 300px;
       background: var(--surface2);
-      overflow: hidden
+      overflow: hidden;
+      z-index: 5
     }
 
     .det-gallery-track {

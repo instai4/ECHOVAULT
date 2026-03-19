@@ -1,24 +1,25 @@
-    /* ── THEME ── */
-  function toggleTheme(){
-      const isDark=document.documentElement.getAttribute('data-theme')==='dark';
-  const next=isDark?'light':'dark';
-  document.documentElement.setAttribute('data-theme',next);
-  localStorage.setItem('ev_theme',next);
-    }
-  (function(){
-      const t=localStorage.getItem('ev_theme')||'dark';
-  document.documentElement.setAttribute('data-theme',t);
-      if(t==='light')setTimeout(()=>{const el=document.getElementById('themeToggle');if(el)el.checked=true},50);
-    })();
 
-  /* ── CONSTANTS ── */
-  const ICONS={trip:'fa-plane',achievement:'fa-trophy',certificate:'fa-certificate',journal:'fa-book-open',event:'fa-calendar-star',project:'fa-code',photo:'fa-camera',other:'fa-box'};
-  const MOOD_ICONS={happy:'fa-face-smile',excited:'fa-face-grin-stars',proud:'fa-fist-raised',nostalgic:'fa-heart',adventurous:'fa-person-hiking',grateful:'fa-hands',neutral:'fa-face-meh',sad:'fa-face-sad-tear'};
-  const MOOD_LABELS={happy:'Happy',excited:'Excited',proud:'Proud',nostalgic:'Nostalgic',adventurous:'Adventurous',grateful:'Grateful',neutral:'Neutral',sad:'Sad'};
-  const TYPE_LABELS={trip:'Trip',achievement:'Achievement',certificate:'Certificate',journal:'Journal',event:'Event',project:'Project',photo:'Photo',other:'Other'};
+/* ── THEME ── */
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const next = isDark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('ev_theme', next);
+}
+(function () {
+  const t = localStorage.getItem('ev_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  if (t === 'light') setTimeout(() => { const el = document.getElementById('themeToggle'); if (el) el.checked = true }, 50);
+})();
 
-  /* ── HELPERS ── */
-  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')}
+/* ── CONSTANTS ── */
+const ICONS = { trip: 'fa-plane', achievement: 'fa-trophy', certificate: 'fa-certificate', journal: 'fa-book-open', event: 'fa-calendar-star', project: 'fa-code', photo: 'fa-camera', other: 'fa-box' };
+const MOOD_ICONS = { happy: 'fa-face-smile', excited: 'fa-face-grin-stars', proud: 'fa-fist-raised', nostalgic: 'fa-heart', adventurous: 'fa-person-hiking', grateful: 'fa-hands', neutral: 'fa-face-meh', sad: 'fa-face-sad-tear' };
+const MOOD_LABELS = { happy: 'Happy', excited: 'Excited', proud: 'Proud', nostalgic: 'Nostalgic', adventurous: 'Adventurous', grateful: 'Grateful', neutral: 'Neutral', sad: 'Sad' };
+const TYPE_LABELS = { trip: 'Trip', achievement: 'Achievement', certificate: 'Certificate', journal: 'Journal', event: 'Event', project: 'Project', photo: 'Photo', other: 'Other' };
+
+/* ── HELPERS ── */
+function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') }
 function fmtDate(d) { if (!d) return ''; return new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) }
 function toast(msg, ok = true) {
   document.getElementById('toastMsg').textContent = msg;
