@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ECHOVAULT — Capture Everything</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+ <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
   <!-- AUTH -->
@@ -21,18 +17,14 @@
       <div class="auth-brand">
         <div class="auth-brand-icon"><i class="fa-solid fa-vault"></i></div>
         <div class="auth-brand-name">ECHO<em>VAULT</em></div>
-        <div class="auth-brand-tagline"><i class="fa-solid fa-star" style="color:var(--c2);margin-right:4px"></i>Your
-          memories, crystallised forever.</div>
+        <div class="auth-brand-tagline"><i class="fa-solid fa-star" style="color:var(--c2);margin-right:4px"></i>Your memories, crystallised forever.</div>
       </div>
       <div class="auth-card">
         <div class="auth-tabs">
-          <button class="auth-tab active" onclick="switchTab('login')"><i class="fa-solid fa-right-to-bracket"
-              style="margin-right:5px"></i>Sign In</button>
-          <button class="auth-tab" onclick="switchTab('signup')"><i class="fa-solid fa-user-plus"
-              style="margin-right:5px"></i>New Account</button>
+          <button class="auth-tab active" onclick="switchTab('login')"><i class="fa-solid fa-right-to-bracket" style="margin-right:5px"></i>Sign In</button>
+          <button class="auth-tab" onclick="switchTab('signup')"><i class="fa-solid fa-user-plus" style="margin-right:5px"></i>New Account</button>
         </div>
-        <div id="authErr" class="a-err"><i class="fa-solid fa-circle-exclamation"></i><span id="authErrMsg"></span>
-        </div>
+        <div id="authErr" class="a-err"><i class="fa-solid fa-circle-exclamation"></i><span id="authErrMsg"></span></div>
         <div id="loginForm">
           <label class="a-lbl"><i class="fa-solid fa-user"></i> Username</label>
           <input class="a-in" id="lU" placeholder="your username" autocomplete="username">
@@ -71,10 +63,8 @@
           <div class="toggle-track"></div>
           <div class="toggle-icons"><i class="fa-solid fa-sun sun"></i><i class="fa-solid fa-moon moon"></i></div>
         </label>
-        <button class="nav-icon-btn" onclick="confirmLogout()" title="Sign out"><i
-            class="fa-solid fa-right-from-bracket"></i></button>
-        <button class="nav-add-btn" onclick="openAdd()"><i class="fa-solid fa-plus"></i> <span>Add
-            Memory</span></button>
+        <button class="nav-icon-btn" onclick="confirmLogout()" title="Sign out"><i class="fa-solid fa-right-from-bracket"></i></button>
+        <button class="nav-add-btn" onclick="openAdd()"><i class="fa-solid fa-plus"></i> <span>Add Memory</span></button>
       </div>
     </nav>
 
@@ -82,19 +72,11 @@
     <section id="hero">
       <div class="hero-blob hero-blob1"></div>
       <div class="hero-blob hero-blob2"></div>
-
-      <!-- floating cartoon icon decorations -->
       <div class="hero-deco-icon" style="top:12%;right:14%;animation-delay:0s"><i class="fa-solid fa-star"></i></div>
-      <div class="hero-deco-icon" style="top:70%;right:22%;animation-delay:1.2s;font-size:1.5rem;color:var(--c4)"><i
-          class="fa-solid fa-bolt"></i></div>
-      <div class="hero-deco-icon" style="top:30%;right:4%;animation-delay:0.6s;font-size:1.2rem;color:var(--c3)"><i
-          class="fa-solid fa-circle-dot"></i></div>
-      <div class="hero-deco-icon" style="bottom:18%;left:8%;animation-delay:0.9s;font-size:1.8rem;color:var(--c5)"><i
-          class="fa-solid fa-diamond"></i></div>
-      <div class="hero-deco-icon" style="top:20%;left:55%;animation-delay:1.8s;font-size:1rem;color:var(--c6)"><i
-          class="fa-solid fa-asterisk"></i></div>
-
-      <!-- floating comic bubble -->
+      <div class="hero-deco-icon" style="top:70%;right:22%;animation-delay:1.2s;font-size:1.5rem;color:var(--c4)"><i class="fa-solid fa-bolt"></i></div>
+      <div class="hero-deco-icon" style="top:30%;right:4%;animation-delay:0.6s;font-size:1.2rem;color:var(--c3)"><i class="fa-solid fa-circle-dot"></i></div>
+      <div class="hero-deco-icon" style="bottom:18%;left:8%;animation-delay:0.9s;font-size:1.8rem;color:var(--c5)"><i class="fa-solid fa-diamond"></i></div>
+      <div class="hero-deco-icon" style="top:20%;left:55%;animation-delay:1.8s;font-size:1rem;color:var(--c6)"><i class="fa-solid fa-asterisk"></i></div>
       <div class="hero-comic-deco">
         <div class="hero-comic-inner">
           <div class="big-emoji"><i class="fa-solid fa-bag-shopping"></i></div>
@@ -102,89 +84,41 @@
           <span style="font-size:.72rem;color:var(--txt2)">Your echoes await</span>
         </div>
       </div>
-
-      <div class="hero-eyebrow"><span class="eyebrow-tag"><i class="fa-solid fa-vault" style="margin-right:6px"></i>Your
-          Personal Memory Vault</span></div>
-      <h1 class="hero-title">
-        Every moment<br>
-        <span class="highlight">deserves</span> to live<br>
-        <span class="highlight2">forever.</span>
-      </h1>
-      <p class="hero-sub">Drop your adventures, wins, certificates and stories into the vault. Attach photos &amp;
-        videos. Revisit anytime.</p>
-      <div
-        style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:0;animation:fadeSlideUp .6s .25s var(--ease) both;position:relative;z-index:1">
-        <span style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--txt2);font-family:var(--fm)"><i
-            class="fa-solid fa-plane" style="color:var(--c4)"></i>Trips</span>
-        <span style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--txt2);font-family:var(--fm)"><i
-            class="fa-solid fa-trophy" style="color:var(--c2)"></i>Wins</span>
-        <span style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--txt2);font-family:var(--fm)"><i
-            class="fa-solid fa-certificate" style="color:var(--c5)"></i>Certificates</span>
-        <span style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--txt2);font-family:var(--fm)"><i
-            class="fa-solid fa-camera" style="color:var(--c3)"></i>Photos</span>
-        <span style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--txt2);font-family:var(--fm)"><i
-            class="fa-solid fa-book-open" style="color:var(--accent)"></i>Journal</span>
+      <div class="hero-eyebrow"><span class="eyebrow-tag"><i class="fa-solid fa-vault" style="margin-right:6px"></i>Your Personal Memory Vault</span></div>
+      <h1 class="hero-title">Every moment<br><span class="highlight">deserves</span> to live<br><span class="highlight2">forever.</span></h1>
+      <p class="hero-sub">Drop your adventures, wins, certificates and stories into the vault. Attach photos &amp; videos. Revisit anytime.</p>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:0;animation:fadeSlideUp .6s .25s var(--ease) both;position:relative;z-index:1">
+        <span style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--txt2);font-family:var(--fm)"><i class="fa-solid fa-plane" style="color:var(--c4)"></i>Trips</span>
+        <span style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--txt2);font-family:var(--fm)"><i class="fa-solid fa-trophy" style="color:var(--c2)"></i>Wins</span>
+        <span style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--txt2);font-family:var(--fm)"><i class="fa-solid fa-certificate" style="color:var(--c5)"></i>Certificates</span>
+        <span style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--txt2);font-family:var(--fm)"><i class="fa-solid fa-camera" style="color:var(--c3)"></i>Photos</span>
+        <span style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--txt2);font-family:var(--fm)"><i class="fa-solid fa-book-open" style="color:var(--accent)"></i>Journal</span>
       </div>
       <div class="hero-ctas" style="margin-top:24px">
         <button class="cta-primary" onclick="openAdd()"><i class="fa-solid fa-plus"></i> Add Your First Echo</button>
-        <button class="cta-secondary" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})"><i
-            class="fa-solid fa-layer-group"></i> Browse Vault</button>
+        <button class="cta-secondary" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-layer-group"></i> Browse Vault</button>
       </div>
       <div class="hero-stat-chips" id="heroChips">
-        <div class="stat-chip">
-          <div class="sc-icon c1"><i class="fa-solid fa-database"></i></div>
-          <div>
-            <div class="sc-val" id="hc1">0</div>
-            <div class="sc-lbl">Echoes</div>
-          </div>
-        </div>
-        <div class="stat-chip">
-          <div class="sc-icon c2"><i class="fa-solid fa-calendar"></i></div>
-          <div>
-            <div class="sc-val" id="hc2">—</div>
-            <div class="sc-lbl">Best Year</div>
-          </div>
-        </div>
-        <div class="stat-chip">
-          <div class="sc-icon c3"><i class="fa-solid fa-location-dot"></i></div>
-          <div>
-            <div class="sc-val" id="hc3">—</div>
-            <div class="sc-lbl">Top City</div>
-          </div>
-        </div>
-        <div class="stat-chip">
-          <div class="sc-icon c4"><i class="fa-solid fa-tag"></i></div>
-          <div>
-            <div class="sc-val" id="hc4">—</div>
-            <div class="sc-lbl">Top Tag</div>
-          </div>
-        </div>
+        <div class="stat-chip"><div class="sc-icon c1"><i class="fa-solid fa-database"></i></div><div><div class="sc-val" id="hc1">0</div><div class="sc-lbl">Echoes</div></div></div>
+        <div class="stat-chip"><div class="sc-icon c2"><i class="fa-solid fa-calendar"></i></div><div><div class="sc-val" id="hc2">—</div><div class="sc-lbl">Best Year</div></div></div>
+        <div class="stat-chip"><div class="sc-icon c3"><i class="fa-solid fa-location-dot"></i></div><div><div class="sc-val" id="hc3">—</div><div class="sc-lbl">Top City</div></div></div>
+        <div class="stat-chip"><div class="sc-icon c4"><i class="fa-solid fa-tag"></i></div><div><div class="sc-val" id="hc4">—</div><div class="sc-lbl">Top Tag</div></div></div>
       </div>
     </section>
 
     <section id="app" class="sec">
-      <div class="sec-eyebrow reveal"><span class="eyebrow-tag"><i class="fa-solid fa-folder-open"
-            style="margin-right:6px"></i>Your Collection</span></div>
-      <h2 class="sec-title reveal"><i class="fa-solid fa-lock"
-          style="margin-right:10px;font-size:.8em;color:var(--accent)"></i>The Vault</h2>
+      <div class="sec-eyebrow reveal"><span class="eyebrow-tag"><i class="fa-solid fa-folder-open" style="margin-right:6px"></i>Your Collection</span></div>
+      <h2 class="sec-title reveal"><i class="fa-solid fa-lock" style="margin-right:10px;font-size:.8em;color:var(--accent)"></i>The Vault</h2>
       <div class="app-controls reveal">
         <div class="filter-scroll" id="filterRow">
-          <button class="fpill active" data-t="all" onclick="setFilter('all',this)"><i
-              class="fa-solid fa-layer-group"></i> All</button>
-          <button class="fpill" data-t="trip" onclick="setFilter('trip',this)"><i class="fa-solid fa-plane"></i>
-            Trips</button>
-          <button class="fpill" data-t="achievement" onclick="setFilter('achievement',this)"><i
-              class="fa-solid fa-trophy"></i> Wins</button>
-          <button class="fpill" data-t="certificate" onclick="setFilter('certificate',this)"><i
-              class="fa-solid fa-certificate"></i> Certs</button>
-          <button class="fpill" data-t="journal" onclick="setFilter('journal',this)"><i
-              class="fa-solid fa-book-open"></i> Journal</button>
-          <button class="fpill" data-t="event" onclick="setFilter('event',this)"><i
-              class="fa-solid fa-calendar-star"></i> Events</button>
-          <button class="fpill" data-t="project" onclick="setFilter('project',this)"><i class="fa-solid fa-code"></i>
-            Projects</button>
-          <button class="fpill" data-t="photo" onclick="setFilter('photo',this)"><i class="fa-solid fa-camera"></i>
-            Photos</button>
+          <button class="fpill active" data-t="all" onclick="setFilter('all',this)"><i class="fa-solid fa-layer-group"></i> All</button>
+          <button class="fpill" data-t="trip" onclick="setFilter('trip',this)"><i class="fa-solid fa-plane"></i> Trips</button>
+          <button class="fpill" data-t="achievement" onclick="setFilter('achievement',this)"><i class="fa-solid fa-trophy"></i> Wins</button>
+          <button class="fpill" data-t="certificate" onclick="setFilter('certificate',this)"><i class="fa-solid fa-certificate"></i> Certs</button>
+          <button class="fpill" data-t="journal" onclick="setFilter('journal',this)"><i class="fa-solid fa-book-open"></i> Journal</button>
+          <button class="fpill" data-t="event" onclick="setFilter('event',this)"><i class="fa-solid fa-calendar-star"></i> Events</button>
+          <button class="fpill" data-t="project" onclick="setFilter('project',this)"><i class="fa-solid fa-code"></i> Projects</button>
+          <button class="fpill" data-t="photo" onclick="setFilter('photo',this)"><i class="fa-solid fa-camera"></i> Photos</button>
         </div>
         <div class="search-wrap">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -196,53 +130,28 @@
 
     <section id="stats">
       <div class="stats-card reveal">
-        <div
-          style="position:absolute;top:16px;right:20px;font-size:2.8rem;color:var(--ink);opacity:.1;pointer-events:none">
-          <i class="fa-solid fa-chart-simple"></i></div>
-        <div class="stat-col">
-          <div class="stat-lbl">Total Echoes</div>
-          <div class="stat-num" id="sTot">0</div>
-          <div class="stat-sub" id="sSubTot">Start capturing</div>
-        </div>
-        <div class="stat-col">
-          <div class="stat-lbl">Most Active Year</div>
-          <div class="stat-num" id="sYr">—</div>
-          <div class="stat-sub" id="sSubYr">No data yet</div>
-        </div>
-        <div class="stat-col">
-          <div class="stat-lbl">Top City</div>
-          <div class="stat-num" id="sCty">—</div>
-          <div class="stat-sub" id="sSubCty">No data yet</div>
-        </div>
-        <div class="stat-col">
-          <div class="stat-lbl">Top Tag</div>
-          <div class="stat-num" id="sTagSt">—</div>
-          <div class="stat-sub" id="sSubTag">No data yet</div>
-        </div>
+        <div style="position:absolute;top:16px;right:20px;font-size:2.8rem;color:var(--ink);opacity:.1;pointer-events:none"><i class="fa-solid fa-chart-simple"></i></div>
+        <div class="stat-col"><div class="stat-lbl">Total Echoes</div><div class="stat-num" id="sTot">0</div><div class="stat-sub" id="sSubTot">Start capturing</div></div>
+        <div class="stat-col"><div class="stat-lbl">Most Active Year</div><div class="stat-num" id="sYr">—</div><div class="stat-sub" id="sSubYr">No data yet</div></div>
+        <div class="stat-col"><div class="stat-lbl">Top City</div><div class="stat-num" id="sCty">—</div><div class="stat-sub" id="sSubCty">No data yet</div></div>
+        <div class="stat-col"><div class="stat-lbl">Top Tag</div><div class="stat-num" id="sTagSt">—</div><div class="stat-sub" id="sSubTag">No data yet</div></div>
       </div>
     </section>
 
     <footer>
       <div class="footer-inner">
-        <div class="footer-brand">ECHO<em style="color:var(--accent);font-style:normal">VAULT</em> <i
-            class="fa-solid fa-vault" style="font-size:.8em;opacity:.6"></i></div>
+        <div class="footer-brand">ECHO<em style="color:var(--accent);font-style:normal">VAULT</em> <i class="fa-solid fa-vault" style="font-size:.8em;opacity:.6"></i></div>
         <div class="footer-center">
-          <p class="creator">Crafted with <i class="fa-solid fa-heart" style="color:var(--accent)"></i> by <a
-              href="https://instai4.github.io/PORT-FOLIO/" target="_blank" class="creator-name">Anurag</a></p>
+          <p class="creator">Crafted with <i class="fa-solid fa-heart" style="color:var(--accent)"></i> by <a href="https://instai4.github.io/PORT-FOLIO/" target="_blank" class="creator-name">Anurag</a></p>
           <div class="social-icons">
-            <a href="https://www.instagram.com/inst.ai.4" target="_blank" class="social-icon"><i
-                class="fab fa-instagram"></i></a>
-            <a href="https://www.facebook.com/share/1DMBwCvzDL/" target="_blank" class="social-icon"><i
-                class="fab fa-facebook"></i></a>
-            <a href="https://www.linkedin.com/in/anurag-singh-43230a380/" target="_blank" class="social-icon"><i
-                class="fab fa-linkedin"></i></a>
+            <a href="https://www.instagram.com/inst.ai.4" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/share/1DMBwCvzDL/" target="_blank" class="social-icon"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.linkedin.com/in/anurag-singh-43230a380/" target="_blank" class="social-icon"><i class="fab fa-linkedin"></i></a>
             <a href="https://github.com/instai4" target="_blank" class="social-icon"><i class="fab fa-github"></i></a>
           </div>
-          <p class="copyright"><i class="fa-regular fa-copyright" style="margin-right:4px"></i>2026 ECHOVAULT — All
-            echoes reserved.</p>
+          <p class="copyright"><i class="fa-regular fa-copyright" style="margin-right:4px"></i>2026 ECHOVAULT — All echoes reserved.</p>
         </div>
-        <div style="font-family:var(--fm);font-size:.65rem;color:var(--txt3);text-align:right">v4.0<br>LOCAL STORAGE
-        </div>
+        <div style="font-family:var(--fm);font-size:.65rem;color:var(--txt3);text-align:right">v4.0<br>LOCAL STORAGE</div>
       </div>
     </footer>
   </div>
@@ -255,8 +164,7 @@
         <div class="modal-x" onclick="closeAdd()"><i class="fa-solid fa-xmark"></i></div>
       </div>
       <div class="modal-body">
-        <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-heading"></i> Title *</label><input class="f-in"
-            id="fTi" placeholder="Name this memory…"></div>
+        <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-heading"></i> Title *</label><input class="f-in" id="fTi" placeholder="Name this memory…"></div>
         <div class="f-row">
           <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-tag"></i> Type</label>
             <select class="f-sel" id="fTy">
@@ -270,14 +178,11 @@
               <option value="other">✦ Other</option>
             </select>
           </div>
-          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-calendar"></i> Date *</label><input class="f-in"
-              id="fDt" type="date"></div>
+          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-calendar"></i> Date *</label><input class="f-in" id="fDt" type="date"></div>
         </div>
         <div class="f-row">
-          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-city"></i> City</label><input class="f-in"
-              id="fCi" placeholder="e.g. Delhi"></div>
-          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-earth-asia"></i> Country</label><input
-              class="f-in" id="fCo" placeholder="e.g. India"></div>
+          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-city"></i> City</label><input class="f-in" id="fCi" placeholder="e.g. Delhi"></div>
+          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-earth-asia"></i> Country</label><input class="f-in" id="fCo" placeholder="e.g. India"></div>
         </div>
         <div class="f-row">
           <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-face-smile"></i> Mood</label>
@@ -292,22 +197,14 @@
               <option value="sad">Sad</option>
             </select>
           </div>
-          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-calendar-check"></i> End Date</label><input
-              class="f-in" id="fEd" type="date"></div>
+          <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-calendar-check"></i> End Date</label><input class="f-in" id="fEd" type="date"></div>
         </div>
-        <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-hashtag"></i> Tags</label><input class="f-in"
-            id="fTg" placeholder="travel, adventure, personal">
-          <div class="f-hint">Separate with commas</div>
-        </div>
-        <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-pen"></i> Description</label><textarea class="f-ta"
-            id="fDe" placeholder="Tell the story of this memory…"></textarea></div>
+        <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-hashtag"></i> Tags</label><input class="f-in" id="fTg" placeholder="travel, adventure, personal"><div class="f-hint">Separate with commas</div></div>
+        <div class="f-g"><label class="f-lbl"><i class="fa-solid fa-pen"></i> Description</label><textarea class="f-ta" id="fDe" placeholder="Tell the story of this memory…"></textarea></div>
         <div class="f-g">
-          <label class="f-lbl"><i class="fa-solid fa-photo-film"></i> Photos & Videos <span
-              style="color:var(--txt3);font-family:var(--fm);font-size:.6rem;text-transform:none;letter-spacing:0;margin-left:4px">JPG,
-              PNG, MP4, MOV • max 8</span></label>
+          <label class="f-lbl"><i class="fa-solid fa-photo-film"></i> Photos &amp; Videos <span style="color:var(--txt3);font-family:var(--fm);font-size:.6rem;text-transform:none;letter-spacing:0;margin-left:4px">JPG, PNG, MP4, MOV • max 8</span></label>
           <div class="media-upload-zone" id="uploadZone" onclick="document.getElementById('mediaInput').click()">
-            <input type="file" id="mediaInput" accept="image/*,video/*" multiple style="display:none"
-              onchange="handleMediaUpload(this.files)">
+            <input type="file" id="mediaInput" accept="image/*,video/*" multiple style="display:none" onchange="handleMediaUpload(this.files)">
             <div class="muz-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
             <div class="muz-txt"><i class="fa-solid fa-folder-open" style="margin-right:6px"></i>Click to upload</div>
             <div class="muz-sub">Images and videos supported</div>
@@ -315,8 +212,7 @@
           <div class="media-preview-grid" id="mediaPreviews"></div>
         </div>
       </div>
-      <div class="modal-ftr"><button class="btn-cancel" onclick="closeAdd()">Cancel</button><button class="btn-save"
-          onclick="saveMemory()"><i class="fa-solid fa-floppy-disk"></i> Save Echo</button></div>
+      <div class="modal-ftr"><button class="btn-cancel" onclick="closeAdd()">Cancel</button><button class="btn-save" onclick="saveMemory()"><i class="fa-solid fa-floppy-disk"></i> Save Echo</button></div>
     </div>
   </div>
 
@@ -331,23 +227,20 @@
   <div id="confirmOv">
     <div class="confirm-box">
       <div class="confirm-icon-wrap">
-        <div class="confirm-icon danger" id="confirmIcon"><i class="fa-solid fa-triangle-exclamation"
-            id="confirmIco"></i></div>
+        <div class="confirm-icon danger" id="confirmIcon"><i class="fa-solid fa-triangle-exclamation" id="confirmIco"></i></div>
       </div>
       <div class="confirm-body">
         <div class="confirm-title" id="confirmTitle">Are you sure?</div>
         <div class="confirm-msg" id="confirmMsg">This action cannot be undone.</div>
       </div>
       <div class="confirm-actions">
-        <button class="confirm-cancel" onclick="closeConfirm()"><i class="fa-solid fa-arrow-left"
-            style="margin-right:6px"></i>Cancel</button>
-        <button class="confirm-ok" id="confirmOkBtn"><i class="fa-solid fa-check"
-            style="margin-right:6px"></i>Confirm</button>
+        <button class="confirm-cancel" onclick="closeConfirm()"><i class="fa-solid fa-arrow-left" style="margin-right:6px"></i>Cancel</button>
+        <button class="confirm-ok" id="confirmOkBtn"><i class="fa-solid fa-check" style="margin-right:6px"></i>Confirm</button>
       </div>
     </div>
   </div>
 
-  <!-- FULLSCREEN LIGHTBOX -->
+  <!-- LIGHTBOX -->
   <div id="lightboxOv">
     <button class="lb-close" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
     <div class="lb-counter" id="lbCounter">1 / 1</div>
@@ -356,8 +249,7 @@
       <button class="lb-btn lb-prev" id="lbPrev" onclick="lbNav(-1)"><i class="fa-solid fa-chevron-left"></i></button>
       <button class="lb-btn lb-next" id="lbNext" onclick="lbNav(1)"><i class="fa-solid fa-chevron-right"></i></button>
       <div class="lb-dots" id="lbDots"></div>
-      <div class="lb-swipe-hint" id="lbHint" style="display:none"><i class="fa-solid fa-hand-pointer"></i> Swipe left /
-        right to navigate</div>
+      <div class="lb-swipe-hint" id="lbHint" style="display:none"><i class="fa-solid fa-hand-pointer"></i> Swipe left / right to navigate</div>
     </div>
   </div>
 
@@ -366,39 +258,17 @@
     <span id="toastMsg"></span>
   </div>
 
+  <!-- FIREBASE -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCwgV12ggFVqn19R7mBB5R75_7ORDNailw",
-      authDomain: "echovault-56e83.firebaseapp.com",
-      projectId: "echovault-56e83",
-      storageBucket: "echovault-56e83.firebasestorage.app",
-      messagingSenderId: "407382001696",
-      appId: "1:407382001696:web:e8a9ca507e1d193a251445",
-      measurementId: "G-21LNTZMJDE"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-
-    /* expose everything to the main non-module script */
-    window._db = db;
-    window._storage = storage;
-    window._fsDoc = doc;
-    window._fsSetDoc = setDoc;
-    window._fsGetDoc = getDoc;
-    window._stRef = ref;
-    window._stUpload = uploadString;
-    window._stGetUrl = getDownloadURL;
-    window._firebaseReady = true;
-    window.dispatchEvent(new Event('firebase-ready'));
+    import{initializeApp}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import{getFirestore,doc,setDoc,getDoc}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    const firebaseConfig={apiKey:"AIzaSyCwgV12ggFVqn19R7mBB5R75_7ORDNailw",authDomain:"echovault-56e83.firebaseapp.com",projectId:"echovault-56e83",storageBucket:"echovault-56e83.firebasestorage.app",messagingSenderId:"407382001696",appId:"1:407382001696:web:e8a9ca507e1d193a251445"};
+    const app=initializeApp(firebaseConfig);
+    const db=getFirestore(app);
+    window._db=db;window._fsDoc=doc;window._fsSetDoc=setDoc;window._fsGetDoc=getDoc;
+    window._firebaseReady=true;window.dispatchEvent(new Event('firebase-ready'));
   </script>
 
   <script src="script.js"></script>
 </body>
-
 </html>
