@@ -322,7 +322,7 @@
   <script type="module">
     import{initializeApp}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import{getFirestore,doc,setDoc,getDoc}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    const firebaseConfig={apiKey:"AIzaSyCwgV12ggFVqn19R7mBB5R75_7ORDNailw",authDomain:"echovault-56e83.firebaseapp.com",projectId:"echovault-56e83",storageBucket:"echovault-56e83.firebasestorage.app",messagingSenderId:"407382001696",appId:"1:407382001696:web:e8a9ca507e1d193a251445"};
+    const firebaseConfig={apiKey:process.env.API_KEY,authDomain:"echovault-56e83.firebaseapp.com",projectId:"echovault-56e83",storageBucket:"echovault-56e83.firebasestorage.app",messagingSenderId:"407382001696",appId:"1:407382001696:web:e8a9ca507e1d193a251445"};
     const app=initializeApp(firebaseConfig);
     const db=getFirestore(app);
     window._db=db;window._fsDoc=doc;window._fsSetDoc=setDoc;window._fsGetDoc=getDoc;
